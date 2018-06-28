@@ -1,0 +1,25 @@
+NVCC	  = nvcc
+CXX       = g++
+CPPFLAGS  = -std=c++11 -Wall -pedantic -O3 -flto
+CUDAFLAGS = -arch sm_30 -Xptxas --opt-level=3
+LDFLAGS   = -L/usr/local/cuda/lib64 -lcuda -lcudart
+objects   = main.o
+tobjects  = test.o
+
+main : $(objects)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $^
+
+test : $(tobjects)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $^
+
+main.o : 
+test.o :
+#reduce.o : reduce.cu reduce.cuh mtrutils.h
+#	$(NVCC) $(CUDAFLAGS) -c $<
+
+.PHONY : all
+all : main test
+
+.PHONY : clean
+clean :
+	-rm -f main test $(objects) $(tobjects)
